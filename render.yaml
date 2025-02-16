@@ -2,7 +2,7 @@ services:
   - type: web
     name: broker-hub-api
     env: node
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npx prisma generate
     startCommand: npm start
     envVars:
       - key: NODE_ENV
@@ -18,4 +18,11 @@ services:
       - key: CASHFREE_SECRET_KEY
         sync: false
       - key: FAST2SMS_API_KEY
-        sync: false 
+        sync: false
+    healthCheckPath: /api/test
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - prisma/**
+        - src/**
+        - package.json 
