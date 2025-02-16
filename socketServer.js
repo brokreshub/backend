@@ -6,9 +6,7 @@ const prisma = new PrismaClient();
 function initializeSocket(server) {
   const io = new Server(server, {
     cors: {
-      origin: process.env.NODE_ENV === 'production' 
-        ? process.env.ALLOWED_ORIGINS.split(',')
-        : ["http://localhost:8081", "http://192.168.29.31:8081"], // Changed: removed https for development
+      origin: '*',
       methods: ["GET", "POST"],
       credentials: true
     },
