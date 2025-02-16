@@ -2,6 +2,10 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const http = require('http');
+const helmet = require('helmet');
+const compression = require('compression');
+const limiter = require('./middleware/rateLimiter');
+const errorMiddleware = require('./middleware/errorMiddleware');
 
 const app = express();
 const server = http.createServer(app);  // Create server with app
@@ -10,15 +14,27 @@ const initializeSocket = require('./socketServer');
 const userRoutes = require('./routes/userRoute');
 const adminRoutes = require('./routes/adminRoute');
 
-// Middleware
+// Security middleware
+app.use(helmet());
 app.use(cors({
-  origin: '*',  // During development only! Be more restrictive in production
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
-app.use(express.json());
-app.use(morgan('dev'));
+
+// Performance middleware
+app.use(compression());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Rate limiting
+app.use('/api/', limiter);
+
+// Logging
+if (process.env.NODE_ENV !== 'production') {
+    app.use(morgan('dev'));
+}
 
 // Routes
 app.use('/api/auth', require('./routes/authroute'));
@@ -38,7 +54,7 @@ app.get('/api/test', (req, res) => {
 const io = initializeSocket(server);
 
 // Error handling
-// app.use(errorMiddleware);
+app.use(errorMiddleware);
 
 // Export both app and server
 module.exports = { app, server };
