@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 
 exports.createProperty = async (req, res) => {
     try {
+        console.log(req.body);
         const {
             user,
             title,
@@ -20,6 +21,17 @@ exports.createProperty = async (req, res) => {
             imageUrls
         } = req.body;
 
+        // First verify if the user exists
+        const userExists = await prisma.user.findUnique({
+            where: { id: parseInt(user) }
+        });
+
+        if (!userExists) {
+            return res.status(404).json({ 
+                message: 'User not found. Cannot create property without a valid user.' 
+            });
+        }
+
         const property = await prisma.property.create({
             data: {
                 title,
@@ -33,7 +45,7 @@ exports.createProperty = async (req, res) => {
                 bedrooms,
                 bathrooms,
                 parking,
-                postedById: user,
+                postedById: parseInt(user),
                 imageUrls: {
                     create: imageUrls.map(url => ({
                         url,
@@ -64,7 +76,11 @@ exports.createProperty = async (req, res) => {
         res.status(201).json(property);
     } catch (error) {
         console.error('Create property error:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ 
+            message: 'Internal server error',
+            error: error.message,
+            details: 'Failed to create property. Please ensure all required fields are provided correctly.'
+        });
     }
 };
 

@@ -45,9 +45,37 @@ app.use('/api/groups', require('./routes/groupRoute'));
 app.use('/api/users', userRoutes);
 app.use('/api/admin', require('./routes/adminRoute'));
 
-// Add a test route to verify API is working
+// Add test routes
+app.get('/', (req, res) => {
+    res.send(`
+        <h1>Welcome to BrokerHub API</h1>
+        <p>Status: 🟢 Running</p>
+        <p>Environment: ${process.env.NODE_ENV}</p>
+        <p>Server Time: ${new Date().toLocaleString()}</p>
+        <h2>Test Endpoints:</h2>
+        <ul>
+            <li><a href="/api/test">/api/test</a> - JSON response</li>
+            <li><a href="/api/health">/api/health</a> - Health check</li>
+        </ul>
+    `);
+});
+
 app.get('/api/test', (req, res) => {
-  res.json({ message: 'API is working!' });
+    res.json({
+        status: 'success',
+        message: 'API is working!',
+        timestamp: new Date(),
+        environment: process.env.NODE_ENV
+    });
+});
+
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'healthy',
+        uptime: process.uptime(),
+        timestamp: new Date(),
+        memory: process.memoryUsage()
+    });
 });
 
 // Initialize socket.io

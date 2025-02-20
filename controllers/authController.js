@@ -36,6 +36,7 @@ const sendOTP = async (phone, message) => {
 
 exports.signup = async (req, res) => {
     try {
+        console.log(req.body);
         const { name, email, password, phone } = req.body;
 
         // Check if user already exists
@@ -49,6 +50,13 @@ exports.signup = async (req, res) => {
 
         // Generate OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Generate a temporary token for OTP verification
+        const tempToken = jwt.sign(
+            { email, otp },
+            JWT_SECRET,
+            { expiresIn: '15m' }
+        );
         
         // Store OTP with email temporarily
         otpStore.set(email, {
@@ -73,6 +81,8 @@ exports.signup = async (req, res) => {
             res.status(200).json({ 
                 message: 'OTP sent successfully',
                 email,
+                status: 200,
+                token: tempToken,  // Include the temporary token
                 requestId: smsResponse.request_id
             });
 
@@ -113,7 +123,7 @@ exports.verifyOTP = async (req, res) => {
                 phone: userData.phone
             }
         });
-
+console.log("newUser: ",newUser);
         // Clear OTP from store
         otpStore.delete(email);
 
