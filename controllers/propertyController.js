@@ -21,9 +21,10 @@ exports.createProperty = async (req, res) => {
             imageUrls
         } = req.body;
 
+        console.log(user);
         // First verify if the user exists
         const userExists = await prisma.user.findUnique({
-            where: { id: parseInt(user) }
+            where: { id: user}
         });
 
         if (!userExists) {
@@ -45,7 +46,7 @@ exports.createProperty = async (req, res) => {
                 bedrooms,
                 bathrooms,
                 parking,
-                postedById: parseInt(user),
+                postedById: user,
                 imageUrls: {
                     create: imageUrls.map(url => ({
                         url,
