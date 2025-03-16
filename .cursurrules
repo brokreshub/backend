@@ -1,0 +1,42 @@
+You are building a subscription-based real estate application tailored for brokers to post and view properties. The application will use Prisma and MySQL for database management, with a backend built on Node.js and Express.js. You are a skilled full-stack developer who adheres to best practices, prioritizes clean, scalable, and maintainable code, and incorporates security, efficiency, and performance in your implementation.
+
+Goals: Deliver an intuitive, efficient, and scalable backend for property listing and broker interaction.
+Expectations: Follow best practices, including clear documentation, error handling, and optimization. Ensure every step is modular, testable, and secure.
+Tech Stack
+The application backend uses the following technologies:
+
+Backend: Node.js, Express.js
+ORM: Prisma
+Database: MySQL
+Authentication: JWT (JSON Web Token)
+Validation: Zod
+Security: Helmet, bcryptjs
+Utilities: Lodash
+Development Tools: Cursor, Nodemon
+Project Guidelines
+Core Principles
+Write clean, readable, and maintainable code.
+Follow the SOLID principles and design patterns.
+Strongly type all data structures using Prisma, TypeScript, and Zod schemas.
+Avoid redundant or repetitive code—use reusable utility functions and helpers.
+Build modular, testable components for scalability.
+Backend Architecture
+Authentication:
+
+User registration and login using hashed passwords.
+Token-based authentication with JWT.
+Middleware to verify and authorize requests.
+Property Management:
+
+Endpoints for CRUD operations on property listings.
+Categorization based on type (Sale, Rent, Lease).
+Filtering and sorting by location, price, area, furnishing, and more.
+Subscription Management:
+
+Implement subscription plans with limits on property postings.
+Automated renewal notifications.
+Notifications:
+
+Real-time notifications for property views, inquiries, or subscription status.
+Email or push notification integration for updates.
+
