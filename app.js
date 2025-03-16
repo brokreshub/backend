@@ -8,7 +8,7 @@ const limiter = require('./middleware/rateLimiter');
 const errorMiddleware = require('./middleware/errorMiddleware');
 
 const app = express();
-const server = http.createServer(app);  // Create server with ap
+const server = http.createServer(app);  // Create server with a
 const initializeSocket = require('./socketServer');
 
 const userRoutes = require('./routes/userRoute');
